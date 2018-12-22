@@ -1,0 +1,14 @@
+{
+    "name": "alaaelgndy/file-uploader",
+    "description": "This is a file file-uploader manager",
+    "authors": [
+        {
+            "name": "alaaelgndy",
+            "email": "alaaelgndy21@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+    	"intervention/image": "^2.4"
+    }
+}
