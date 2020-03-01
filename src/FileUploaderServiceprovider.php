@@ -13,10 +13,12 @@ class FileUploaderServiceprovider extends ServiceProvider
      */
     public function boot()
     {
-	$this->loadMigrationsFrom(__DIR__.'/migrations');
-	$this->publishes([
-	    __DIR__.'/Config/ElgndyFileConfig.php' => config_path('ElgndyFileConfig.php'),
-	]); 
+        $this->loadMigrationsFrom(__DIR__ . '/migrations');
+        $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
+
+        $this->publishes([
+            __DIR__ . '/Config/elgndy_media.php' => config_path('elgndy_media.php'),
+        ]);
     }
 
     /**
@@ -27,7 +29,8 @@ class FileUploaderServiceprovider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-	    __DIR__.'/Config/ElgndyFileConfig.php', 'ElgndyFileConfig'
-	); 
+            __DIR__ . '/Config/elgndy_media.php',
+            'elgndy_media'
+        );
     }
 }

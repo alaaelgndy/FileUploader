@@ -1,9 +1,9 @@
-<?php 
+<?php
+
 namespace Elgndy\FileUploader\Events;
 
-use Elgndy\FileUploader\Contracts\Events\BaseEvent;
+use Composer\EventDispatcher\Event;
 
-class ImageHasBeenUploadedOnStorage extends BaseEvent
+class ImageHasBeenUploadedOnStorage extends Event
 {
-    
 }
