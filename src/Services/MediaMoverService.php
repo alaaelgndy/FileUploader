@@ -69,9 +69,9 @@ class mediaMoverService
         return $this->fullRealPath;
     }
 
-    public function saveInDb()
+    public function saveInDb(): Media
     {
-        $this->mediaModel->create([
+        return $this->mediaModel->create([
             'model_type' => get_class($this->model),
             'model_id' => $this->model->id,
             'file_path' => $this->fullRealPath,
