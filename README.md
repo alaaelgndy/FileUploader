@@ -75,3 +75,9 @@ class User extends Model implements FileUploaderInterface
 }
 
 ```
+
+## todo
+- enhance the readme file.
+- increase the unit test coverage.
+- adding resizing files feature.
+- add more example of use. 
