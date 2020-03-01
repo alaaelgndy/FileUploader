@@ -3,6 +3,7 @@
 namespace Elgndy\FileUploader\Services;
 
 use Exception;
+use Elgndy\FileUploader\Models\Media;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 
@@ -40,6 +41,18 @@ class mediaMoverService
      */
     private $fullRealPath;
 
+    /**
+     * our media model
+     *
+     * @var Model
+     */
+    private $mediaModel;
+
+    public function __construct(Media $media)
+    {
+        $this->mediaModel = $media;
+    }
+
 
     public function validateBeforeMove(array $data): self
     {
@@ -54,6 +67,16 @@ class mediaMoverService
         throw_if(!$moved, new Exception("Could not move the media"));
 
         return $this->fullRealPath;
+    }
+
+    public function saveInDb()
+    {
+        $this->mediaModel->create([
+            'model_type' => get_class($this->model),
+            'model_id' => $this->model->id,
+            'file_path' => $this->fullRealPath,
+            'file_type' => $this->getMediaTypeFromTempPath()
+        ]);
     }
 
     private function checkTempMediaExistence(string $tempMedia): self

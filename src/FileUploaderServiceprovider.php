@@ -3,6 +3,7 @@
 namespace Elgndy\FileUploader;
 
 use Illuminate\Support\ServiceProvider;
+use Elgndy\FileUploader\EventServiceProvider;
 
 class FileUploaderServiceprovider extends ServiceProvider
 {
@@ -28,6 +29,9 @@ class FileUploaderServiceprovider extends ServiceProvider
      */
     public function register()
     {
+
+        $this->app->register(EventServiceProvider::class);
+
         $this->mergeConfigFrom(
             __DIR__ . '/Config/elgndy_media.php',
             'elgndy_media'

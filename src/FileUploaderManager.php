@@ -36,7 +36,7 @@ class FileUploaderManager
         ];
     }
 
-    public function moveMediaFromTempPathToRealPath(Model $model, string $tempMedia): array
+    public function storeTempMediaInRealPath(Model $model, string $tempMedia): array
     {
         $validated = $this->mediaMoverService->validateBeforeMove([
             'model' => $model,
@@ -44,6 +44,8 @@ class FileUploaderManager
         ]);
 
         $moved = $validated->move();
+
+        $validated->saveInDb();
 
         return [
             'filePath' => $moved,

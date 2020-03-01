@@ -3,6 +3,7 @@
 namespace Elgndy\FileUploader\Controllers;
 
 use App\Http\Controllers\Controller;
+use Elgndy\FileUploader\Events\UploadableModelHasCreated;
 use Elgndy\FileUploader\FileUploaderManager;
 use Elgndy\FileUploader\Requests\MoveTempFileRequest;
 use Elgndy\FileUploader\Requests\CreateTempFileRequest;
@@ -30,8 +31,6 @@ class FileUploaderController extends Controller
         $model = $modelsNamespace . $request->model;
         $model = $model::find($request->id);
 
-        $moved = $this->fileUploaderManager->moveMediaFromTempPathToRealPath($model, $request->tempPath);
-
-        return response()->json($moved);
+        event(new UploadableModelHasCreated($model, $request->tempPath));
     }
 }

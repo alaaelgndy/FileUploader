@@ -17,7 +17,7 @@ class CreateMediaTable extends Migration
             $table->increments('id');
             $table->morphs('model');
             $table->string('file_path');
-            $table->integer('file_type');
+            $table->string('file_type');
             $table->json('metadata');
             $table->timestamps();
         });
