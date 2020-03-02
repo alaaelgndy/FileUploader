@@ -29,7 +29,8 @@ class FileUploaderController extends Controller
         $model = config('elgndy_media.models_namespace') . $request->model;
         $model = $model::find($request->id);
 
-        $stored = $this->fileUploaderManager->storeTempMediaInRealPath($model, $request->tempPath)->toArray();
+        $stored = $this->fileUploaderManager->storeTempMediaInRealPath($model, $request->tempPath)
+            ->toArray();
 
         return response()->json($stored);
     }
