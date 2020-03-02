@@ -27,6 +27,14 @@ class FileUploaderManager
         $this->mediaDeleterService = $mds;
     }
 
+    /**
+     * Upload file for the first time in temp folder.
+     * The user of this function is the client side by http request.
+     * 
+     * @param array $data
+     * 
+     * @return array
+     */
     public function uploadTheTempFile(array $data): array
     {
         $validated = $this->mediaUploaderService->validatePassedDataForTempMedia($data);
@@ -40,18 +48,41 @@ class FileUploaderManager
         ];
     }
 
+    /**
+     * Move the files from temp to real path. 
+     * ceate the relation between the related model.
+     *
+     * This function will be invoked by using UploadableModelHasCreated.
+     * 
+     * @param Model $model
+     * @param string $tempMedia
+     * 
+     * @return Media
+     */
     public function storeTempMediaInRealPath(Model $model, string $tempMedia): Media
     {
-        $validated = $this->mediaMoverService->validateBeforeMove([
-            'model' => $model,
-            'tempMedia' => $tempMedia
-        ]);
+        $validated = $this->mediaMoverService->validateBeforeMove(
+            [
+                'model' => $model,
+                'tempMedia' => $tempMedia
+            ]
+        );
 
         $moved = $validated->move();
 
         return $validated->saveInDb();
     }
 
+    /**
+     * Delete the folder of specific model record.
+     * Delete the relation.
+     *
+     * This function will be invoked by using UploadableModelHasDeleted.
+     * 
+     * @param Model $model
+     * 
+     * @return void
+     */
     public function deleteModelMediaFolder(Model $model)
     {
         $validated = $this->mediaDeleterService->validateBeforeDelete($model);

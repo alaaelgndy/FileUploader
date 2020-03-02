@@ -18,7 +18,7 @@ class RemoveMediaFolderForSpecificModel
     /**
      * Handle the event.
      *
-     * @param  UploadableModelHasCreated  $event
+     * @param  UploadableModelHasCreated $event
      * @return void
      */
     public function handle(UploadableModelHasDeleted $event)
@@ -29,8 +29,8 @@ class RemoveMediaFolderForSpecificModel
     /**
      * Handle a job failure.
      *
-     * @param  UploadableModelHasCreated  $event
-     * @param  \Exception  $exception
+     * @param  UploadableModelHasCreated $event
+     * @param  \Exception                $exception
      * @return void
      */
     public function failed(UploadableModelHasDeleted $event, $exception)

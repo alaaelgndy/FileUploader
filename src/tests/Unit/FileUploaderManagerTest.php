@@ -29,7 +29,9 @@ class FileUploaderManagerTest extends TestCase
         $this->createTableInDB();
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_can_upload_file_in_the_temp_storage()
     {
         Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
@@ -41,7 +43,9 @@ class FileUploaderManagerTest extends TestCase
         $this->assertArrayHasKey('baseUrl', $returnedArray);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_uploads_the_temp_file_in_a_righ_path()
     {
         Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
@@ -53,7 +57,9 @@ class FileUploaderManagerTest extends TestCase
         $this->assertStringStartsWith("temp/{$tableName}/images/", $returnedArray['filePath']);
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_can_store_the_temp_file_in_the_real_path()
     {
         Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
@@ -73,7 +79,9 @@ class FileUploaderManagerTest extends TestCase
         $this->assertTrue(Storage::exists($returnedAfterMove->file_path));
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_can_store_the_file_using_the_event_listener()
     {
         Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
@@ -87,7 +95,9 @@ class FileUploaderManagerTest extends TestCase
         $this->assertEquals(1, ModelImpelementsFileUploaderInterface::count());
     }
 
-    /** @test */
+    /**
+     * @test 
+     */
     public function it_can_remove_media_folder_when_the_related_model_has_been_removed_using_event()
     {
         Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
@@ -130,11 +140,15 @@ class FileUploaderManagerTest extends TestCase
     private function createTableInDB()
     {
 
-        tap($this->app['db']->connection()->getSchemaBuilder(), function ($schema) {
-            $schema->create('elgndy_mediaa', function (Blueprint $table) {
-                $table->increments('id');
-                $table->timestamps();
-            });
-        });
+        tap(
+            $this->app['db']->connection()->getSchemaBuilder(), function ($schema) {
+                $schema->create(
+                    'elgndy_mediaa', function (Blueprint $table) {
+                        $table->increments('id');
+                        $table->timestamps();
+                    }
+                );
+            }
+        );
     }
 }

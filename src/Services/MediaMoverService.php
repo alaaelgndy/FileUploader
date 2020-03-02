@@ -71,12 +71,14 @@ class mediaMoverService
 
     public function saveInDb(): Media
     {
-        return $this->mediaModel->create([
+        return $this->mediaModel->create(
+            [
             'model_type' => get_class($this->model),
             'model_id' => $this->model->id,
             'file_path' => $this->fullRealPath,
             'file_type' => $this->getMediaTypeFromTempPath()
-        ]);
+            ]
+        );
     }
 
     private function checkTempMediaExistence(string $tempMedia): self

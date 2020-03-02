@@ -17,9 +17,11 @@ class FileUploaderServiceprovider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__ . '/migrations');
         $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
 
-        $this->publishes([
+        $this->publishes(
+            [
             __DIR__ . '/Config/elgndy_media.php' => config_path('elgndy_media.php'),
-        ]);
+            ]
+        );
     }
 
     /**

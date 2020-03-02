@@ -18,7 +18,7 @@ class StoreTempMediaInRealPath
     /**
      * Handle the event.
      *
-     * @param  UploadableModelHasCreated  $event
+     * @param  UploadableModelHasCreated $event
      * @return void
      */
     public function handle(UploadableModelHasCreated $event)
@@ -29,8 +29,8 @@ class StoreTempMediaInRealPath
     /**
      * Handle a job failure.
      *
-     * @param  UploadableModelHasCreated  $event
-     * @param  \Exception  $exception
+     * @param  UploadableModelHasCreated $event
+     * @param  \Exception                $exception
      * @return void
      */
     public function failed(UploadableModelHasCreated $event, $exception)
