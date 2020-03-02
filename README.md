@@ -40,6 +40,11 @@
 - HEADER (content type: multipart/encrypted)
 - BODY (model: string, mediaType: string, media: file)
 
+### Installation
+```
+composer require alaaelgndy/file-uploader
+```
+
 ### Usage
 - configure your models namespace like (App\\)
 - configure your temp path, the default is (temp/).
@@ -53,9 +58,12 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use Elgndy\FileUploader\Contracts\FileUploaderInterface;
+use Elgndy\FileUploader\Traits\Uploadable;
 
 class User extends Model implements FileUploaderInterface
 {
+    use Uploadable;
+
     public function getMediaTypesWithItsOwnValidationRules(): array
     {
         return [
@@ -81,3 +89,4 @@ class User extends Model implements FileUploaderInterface
 - increase the unit test coverage.
 - adding resizing files feature.
 - add more example of use. 
+- create custom exception.
