@@ -14,7 +14,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Elgndy\FileUploader\Events\UploadableModelHasCreated;
 use Elgndy\FileUploader\Events\UploadableModelHasDeleted;
-use Elgndy\FileUploader\Tests\Models\ModelImpelementsFileUploaderInterface;
+use Elgndy\FileUploader\Tests\Models\ModelImplementsFileUploaderInterface;
 
 class FileUploaderManagerTest extends TestCase
 {
@@ -53,7 +53,7 @@ class FileUploaderManagerTest extends TestCase
 
         $returnedArray = $this->fileUploaderManager->uploadTheTempFile($data);
 
-        $tableName = (new ModelImpelementsFileUploaderInterface())->getTable();
+        $tableName = (new ModelImplementsFileUploaderInterface())->getTable();
         $this->assertStringStartsWith("temp/{$tableName}/images/", $returnedArray['filePath']);
     }
 
@@ -67,7 +67,7 @@ class FileUploaderManagerTest extends TestCase
 
         $returnedArray = $this->fileUploaderManager->uploadTheTempFile($data);
 
-        $newModelRecord = ModelImpelementsFileUploaderInterface::create([]);
+        $newModelRecord = ModelImplementsFileUploaderInterface::create([]);
 
         $returnedAfterMove = $this->fileUploaderManager->storeTempMediaInRealPath(
             $newModelRecord,
@@ -75,7 +75,7 @@ class FileUploaderManagerTest extends TestCase
         );
 
         $this->assertInstanceOf(Media::class, $returnedAfterMove);
-        $this->assertEquals(1, ModelImpelementsFileUploaderInterface::count());
+        $this->assertEquals(1, ModelImplementsFileUploaderInterface::count());
         $this->assertTrue(Storage::exists($returnedAfterMove->file_path));
     }
 
@@ -89,10 +89,10 @@ class FileUploaderManagerTest extends TestCase
 
         $returnedArray = $this->fileUploaderManager->uploadTheTempFile($data);
 
-        $newModelRecord = ModelImpelementsFileUploaderInterface::create([]);
+        $newModelRecord = ModelImplementsFileUploaderInterface::create([]);
 
         event(new UploadableModelHasCreated($newModelRecord, $returnedArray['filePath']));
-        $this->assertEquals(1, ModelImpelementsFileUploaderInterface::count());
+        $this->assertEquals(1, ModelImplementsFileUploaderInterface::count());
     }
 
     /**
@@ -101,12 +101,12 @@ class FileUploaderManagerTest extends TestCase
     public function it_can_remove_media_folder_when_the_related_model_has_been_removed_using_event()
     {
         Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
-        $newModelRecord = ModelImpelementsFileUploaderInterface::create([]);
+        $newModelRecord = ModelImplementsFileUploaderInterface::create([]);
         $this->createMediaFactory(5, $newModelRecord);
 
         $countBeforeDelete = $newModelRecord->mediaCount();
         event(new UploadableModelHasDeleted($newModelRecord));
-        $countAfterDelete = ModelImpelementsFileUploaderInterface::find($newModelRecord->id)->mediaCount();
+        $countAfterDelete = ModelImplementsFileUploaderInterface::find($newModelRecord->id)->mediaCount();
 
         $newModelRecord->delete();
 

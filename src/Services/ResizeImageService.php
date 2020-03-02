@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 namespace Elgndy\FileUploader\Services;
 
@@ -8,7 +8,7 @@ class ResizeImageService
 {
     /**
      * @var    Array $results
-     * @return Array of images every image has obj contains infos about it => 
+     * @return Array of images every image has obj contains infos about it =>
      * {mime , dirname , basename , extension , filename}
      */
     protected $results = [];
@@ -26,14 +26,14 @@ class ResizeImageService
     /**
      * @param  string $local_image_name
      * @param  string $folder_path
-     * @param  Array  $sizes
+     * @param  Array $sizes
      * @return Array Images after resize
      */
-    public function resize($local_image_name , $local_path , array $sizes)
+    public function resize(string $local_image_name, string $local_path, array $sizes): array
     {
         foreach ($sizes as $size) {
             $resolver = $this->resolveSize($size);
-            $this->results[] = $this->image_package::make($local_path.'/'.$local_image_name)
+            $this->results[] = $this->image_package::make($local_path . '/' . $local_image_name)
                 ->resize($resolver['width'], $resolver['height'])
                 ->save($local_path . '/' . $size . '_' . $local_image_name);
         }
@@ -44,9 +44,9 @@ class ResizeImageService
      * @param  String $size
      * @return Array [width , height]
      */
-    private function resolveSize($size)
+    private function resolveSize(array $size): array
     {
         $array = explode(",", $size);
-        return ['width' => intval($array[0]) , 'height' => intval($array[1])];
+        return ['width' => intval($array[0]), 'height' => intval($array[1])];
     }
 }

@@ -48,9 +48,9 @@ composer require alaaelgndy/file-uploader
 ### Usage
 - configure your models namespace like (App\\)
 - configure your temp path, the default is (temp/).
-- update your models to impelement (Elgndy\FileUploader\Contracts\FileUploaderInterface).
+- update your models to implement (Elgndy\FileUploader\Contracts\FileUploaderInterface).
 - use Uploadable trait in your uploadable models.
-- impelement this function getMediaTypesWithItsOwnValidationRules()
+- implement this function getMediaTypesWithItsOwnValidationRules()
     - the keys are the mediaType
     - the values are the available extensions for this specefic mediaType.
 ```
@@ -93,7 +93,7 @@ class User extends Model implements FileUploaderInterface
 
 #### what if the related model has deleted.
 - by using this event it will remove the relation from database and remove the folder from the FS.
-(UploadableMediaHasDeleted) and pass your deleted record which is type of Model. thats it :).
+(UploadableMediaHasDeleted) and pass your deleted record which is type of Model. that's it :).
 
 
 ### other helpful functions.

@@ -23,7 +23,7 @@ trait Uploadable
         return $media;
     }
 
-    public function firstMedia(?string $type = null)
+    public function firstMedia(?string $type = '')
     {
         $media = $this->media;
 

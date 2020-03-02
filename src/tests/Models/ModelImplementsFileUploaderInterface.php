@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Elgndy\FileUploader\Contracts\FileUploaderInterface;
 use Elgndy\FileUploader\Traits\Uploadable;
 
-class ModelImpelementsFileUploaderInterface extends Model implements FileUploaderInterface
+class ModelImplementsFileUploaderInterface extends Model implements FileUploaderInterface
 {
     use Uploadable;
 

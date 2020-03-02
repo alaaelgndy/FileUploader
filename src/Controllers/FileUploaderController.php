@@ -26,12 +26,11 @@ class FileUploaderController extends Controller
 
     public function move(MoveTempFileRequest $request)
     {
-        $modelsNamespace = config('elgndy_media.models_namespace');
-        $model = $modelsNamespace . $request->model;
+        $model = config('elgndy_media.models_namespace') . $request->model;
         $model = $model::find($request->id);
 
-        $stored = $this->fileUploaderManager->storeTempMediaInRealPath($model, $request->tempPath);
+        $stored = $this->fileUploaderManager->storeTempMediaInRealPath($model, $request->tempPath)->toArray();
 
-        return response()->json($stored->toArray());
+        return response()->json($stored);
     }
 }

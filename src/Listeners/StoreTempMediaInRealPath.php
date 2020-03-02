@@ -21,7 +21,7 @@ class StoreTempMediaInRealPath
      * @param  UploadableModelHasCreated $event
      * @return void
      */
-    public function handle(UploadableModelHasCreated $event)
+    public function handle(UploadableModelHasCreated $event): void
     {
         $this->fileUploaderManager->storeTempMediaInRealPath($event->model, $event->tempPath);
     }
@@ -30,10 +30,10 @@ class StoreTempMediaInRealPath
      * Handle a job failure.
      *
      * @param  UploadableModelHasCreated $event
-     * @param  \Exception                $exception
+     * @param  \Exception $exception
      * @return void
      */
-    public function failed(UploadableModelHasCreated $event, $exception)
+    public function failed(UploadableModelHasCreated $event, $exception): void
     {
         throw $exception;
     }

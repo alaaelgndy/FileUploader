@@ -21,7 +21,8 @@ class FileUploaderManager
         MediaUploaderService $mus,
         MediaMoverService $mms,
         MediaDeleterService $mds
-    ) {
+    )
+    {
         $this->mediaUploaderService = $mus;
         $this->mediaMoverService = $mms;
         $this->mediaDeleterService = $mds;
@@ -30,14 +31,15 @@ class FileUploaderManager
     /**
      * Upload file for the first time in temp folder.
      * The user of this function is the client side by http request.
-     * 
+     *
      * @param array $data
-     * 
+     *
      * @return array
      */
     public function uploadTheTempFile(array $data): array
     {
         $validated = $this->mediaUploaderService->validatePassedDataForTempMedia($data);
+
         $tempPath = $this->getTempPath();
 
         $uploaded = $validated->upload($tempPath);
@@ -49,14 +51,14 @@ class FileUploaderManager
     }
 
     /**
-     * Move the files from temp to real path. 
+     * Move the files from temp to real path.
      * ceate the relation between the related model.
      *
      * This function will be invoked by using UploadableModelHasCreated.
-     * 
+     *
      * @param Model $model
      * @param string $tempMedia
-     * 
+     *
      * @return Media
      */
     public function storeTempMediaInRealPath(Model $model, string $tempMedia): Media
@@ -68,7 +70,7 @@ class FileUploaderManager
             ]
         );
 
-        $moved = $validated->move();
+        $validated->move();
 
         return $validated->saveInDb();
     }
@@ -78,15 +80,16 @@ class FileUploaderManager
      * Delete the relation.
      *
      * This function will be invoked by using UploadableModelHasDeleted.
-     * 
+     *
      * @param Model $model
-     * 
-     * @return void
+     *
+     * @return bool
      */
-    public function deleteModelMediaFolder(Model $model)
+    public function deleteModelMediaFolder(Model $model): bool
     {
         $validated = $this->mediaDeleterService->validateBeforeDelete($model);
-        $removed = $validated->removeFolderFromFS();
+
+        $validated->removeFolderFromFS();
 
         return $validated->deleteFromDb();
     }
