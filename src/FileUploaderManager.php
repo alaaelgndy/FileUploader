@@ -3,6 +3,7 @@
 namespace Elgndy\FileUploader;
 
 use Elgndy\FileUploader\Models\Media;
+use Elgndy\FileUploader\Services\MediaDeleterService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Elgndy\FileUploader\Services\MediaMoverService;
@@ -14,13 +15,16 @@ class FileUploaderManager
 
     private $mediaMoverService;
 
+    private $mediaDeleterService;
 
     public function __construct(
         MediaUploaderService $mus,
-        MediaMoverService $mms
+        MediaMoverService $mms,
+        MediaDeleterService $mds
     ) {
         $this->mediaUploaderService = $mus;
         $this->mediaMoverService = $mms;
+        $this->mediaDeleterService = $mds;
     }
 
     public function uploadTheTempFile(array $data): array
@@ -46,6 +50,14 @@ class FileUploaderManager
         $moved = $validated->move();
 
         return $validated->saveInDb();
+    }
+
+    public function deleteModelMediaFolder(Model $model)
+    {
+        $validated = $this->mediaDeleterService->validateBeforeDelete($model);
+        $removed = $validated->removeFolderFromFS();
+
+        return $validated->deleteFromDb();
     }
 
     private function getTempPath(): string
