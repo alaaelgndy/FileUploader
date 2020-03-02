@@ -33,12 +33,5 @@
     },
     "config": {
         "sort-packages": true
-    },
-    "extra": {
-        "laravel": {
-            "providers": [
-                "Elgndy\\FileUploader\\FileUploaderServiceProvider"
-            ]
-        }
     }
 }
