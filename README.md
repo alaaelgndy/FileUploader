@@ -53,7 +53,7 @@ composer require alaaelgndy/file-uploader
 - impelement this function getMediaTypesWithItsOwnValidationRules()
     - the keys are the mediaType
     - the values are the available extensions for this specefic mediaType.
-```
+```php
 <?php
 
 namespace App;
@@ -111,9 +111,9 @@ class User extends Model implements FileUploaderInterface
         - logos/
         - national_id/
 
-## todo
-- enhance the readme file.
-- increase the unit test coverage.
-- adding resizing files feature.
-- add more example of use. 
-- create custom exception.
+## ToDo
+- [ ] enhance the readme file.
+- [ ] increase the unit test coverage.
+- [ ] adding resizing files feature.
+- [ ] add more example of use. 
+- [ ] create custom exception.
