@@ -49,8 +49,10 @@ composer require alaaelgndy/file-uploader
 - configure your models namespace like (App\\)
 - configure your temp path, the default is (temp/).
 - update your models to impelement (Elgndy\FileUploader\Contracts\FileUploaderInterface).
-- then configure the available media type for each model and the rules of the files extension.
-
+- use Uploadable trait in your uploadable models.
+- impelement this function getMediaTypesWithItsOwnValidationRules()
+    - the keys are the mediaType
+    - the values are the available extensions for this specefic mediaType.
 ```
 <?php
 
@@ -83,6 +85,31 @@ class User extends Model implements FileUploaderInterface
 }
 
 ```
+- after these points now you can let the client side call our API anytime to create temp files.
+
+#### how to relate the temp media to specific model record.
+- first write your own business logic to create the record and after creating it, fire this event
+(UploadableMediaHasCreated) and pass your created record which is type of Model, and the temp path. 
+
+#### what if the related model has deleted.
+- by using this event it will remove the relation from database and remove the folder from the FS.
+(UploadableMediaHasDeleted) and pass your deleted record which is type of Model. thats it :).
+
+
+### other helpful functions.
+- the Uploadable trait has these functions.
+    - media() returns collection of related media.
+    - getMedia(...$types) returns collection of related media with specific types.
+    - mediaCount(...$types) returns integer of the count rely on your passed types.
+    - custom image attribute will get the first media always (take care of this point).
+
+
+### the FS structure
+- users/
+    - userId/
+        - images/
+        - logos/
+        - national_id/
 
 ## todo
 - enhance the readme file.
