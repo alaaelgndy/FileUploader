@@ -18,7 +18,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Elgndy\\FileUploader\\": "packages/FileUploader/src"
+            "Elgndy\\FileUploader\\": "src/"
         }
     },
     "autoload-dev": {
@@ -33,5 +33,12 @@
     },
     "config": {
         "sort-packages": true
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Elgndy\\FileUploader\\FileUploaderServiceprovider"
+            ]
+        }
     }
 }
