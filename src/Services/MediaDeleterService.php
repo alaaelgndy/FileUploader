@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Elgndy\FileUploader\Contracts\FileUploaderInterface;
+use Illuminate\Database\Eloquent\Collection;
 
 class MediaDeleterService
 {
@@ -32,7 +33,7 @@ class MediaDeleterService
         return Storage::deleteDirectory($folder);
     }
 
-    public function deleteFromDb(): bool
+    public function deleteFromDb(): Collection
     {
         return $this->model->media->each->delete();
     }

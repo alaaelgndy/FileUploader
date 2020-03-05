@@ -126,7 +126,7 @@ class FileUploaderManagerTest extends TestCase
     private function prepareDataForUploading(): array
     {
         return [
-            'model' => 'ModelImpelementsFileUploaderInterface',
+            'model' => 'ModelImplementsFileUploaderInterface',
             'mediaType' => 'images',
             'media' => $this->fileFaker()
         ];
@@ -141,9 +141,11 @@ class FileUploaderManagerTest extends TestCase
     {
 
         tap(
-            $this->app['db']->connection()->getSchemaBuilder(), function ($schema) {
+            $this->app['db']->connection()->getSchemaBuilder(),
+            function ($schema) {
                 $schema->create(
-                    'elgndy_mediaa', function (Blueprint $table) {
+                    'elgndy_mediaa',
+                    function (Blueprint $table) {
                         $table->increments('id');
                         $table->timestamps();
                     }

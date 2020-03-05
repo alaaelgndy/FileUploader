@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
 use Elgndy\FileUploader\Services\MediaMoverService;
 use Elgndy\FileUploader\Services\MediaUploaderService;
+use Illuminate\Database\Eloquent\Collection;
 
 class FileUploaderManager
 {
@@ -21,8 +22,7 @@ class FileUploaderManager
         MediaUploaderService $mus,
         MediaMoverService $mms,
         MediaDeleterService $mds
-    )
-    {
+    ) {
         $this->mediaUploaderService = $mus;
         $this->mediaMoverService = $mms;
         $this->mediaDeleterService = $mds;
@@ -85,7 +85,7 @@ class FileUploaderManager
      *
      * @return bool
      */
-    public function deleteModelMediaFolder(Model $model): bool
+    public function deleteModelMediaFolder(Model $model): Collection
     {
         $validated = $this->mediaDeleterService->validateBeforeDelete($model);
 
