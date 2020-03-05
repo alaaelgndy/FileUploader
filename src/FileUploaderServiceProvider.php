@@ -5,7 +5,7 @@ namespace Elgndy\FileUploader;
 use Illuminate\Support\ServiceProvider;
 use Elgndy\FileUploader\EventServiceProvider;
 
-class FileUploaderServiceprovider extends ServiceProvider
+class FileUploaderServiceProvider extends ServiceProvider
 {
     /**
      * Bootstrap the application services.

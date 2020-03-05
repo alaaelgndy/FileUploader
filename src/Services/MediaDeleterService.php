@@ -20,7 +20,7 @@ class MediaDeleterService
     {
         $check = $model instanceof FileUploaderInterface;
 
-        throw_if(!$check, new Exception("The model does not impelement " . FileUploaderInterface::class));
+        throw_if(!$check, new Exception("The model does not implement " . FileUploaderInterface::class));
 
         return $this->setProperties($model);
     }
@@ -32,16 +32,15 @@ class MediaDeleterService
         return Storage::deleteDirectory($folder);
     }
 
-    public function deleteFromDb()
+    public function deleteFromDb(): bool
     {
-        $this->model->media->each->delete();
+        return $this->model->media->each->delete();
     }
 
     private function getTheFolder(): string
     {
         return $this->model->getTable() . '/' . $this->model->id;
     }
-
 
 
     private function setProperties(Model $model): self

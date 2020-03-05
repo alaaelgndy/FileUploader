@@ -44,7 +44,7 @@ class MediaUploaderService
     }
 
 
-    public function upload(?string $tempPath = null): string
+    public function upload(?string $tempPath = ''): string
     {
         $generatedPath = ($tempPath) ? $this->generateTempMediaPath($tempPath) : $this->generateRealPath();
 
@@ -85,7 +85,7 @@ class MediaUploaderService
     private function isThisModelReadyForUse(): self
     {
         if (!$this->model instanceof FileUploaderInterface) {
-            throw new Exception("This model {$this->model} must impelements " . FileUploaderInterface::class);
+            throw new Exception("This model {$this->model} must implements " . FileUploaderInterface::class);
         }
 
         return $this;

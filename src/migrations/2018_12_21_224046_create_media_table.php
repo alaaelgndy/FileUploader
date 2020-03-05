@@ -13,16 +13,14 @@ class CreateMediaTable extends Migration
      */
     public function up()
     {
-        Schema::create(
-            'media', function (Blueprint $table) {
-                $table->increments('id');
-                $table->morphs('model');
-                $table->string('file_path');
-                $table->string('file_type');
-                $table->json('metadata');
-                $table->timestamps();
-            }
-        );
+        Schema::create('media', function (Blueprint $table) {
+            $table->increments('id');
+            $table->morphs('model');
+            $table->string('file_path');
+            $table->string('file_type');
+            $table->json('metadata');
+            $table->timestamps();
+        });
     }
 
     /**

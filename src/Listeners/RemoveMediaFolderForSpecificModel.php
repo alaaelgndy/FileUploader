@@ -21,7 +21,7 @@ class RemoveMediaFolderForSpecificModel
      * @param  UploadableModelHasCreated $event
      * @return void
      */
-    public function handle(UploadableModelHasDeleted $event)
+    public function handle(UploadableModelHasDeleted $event): void
     {
         $this->fileUploaderManager->deleteModelMediaFolder($event->model);
     }
@@ -30,10 +30,10 @@ class RemoveMediaFolderForSpecificModel
      * Handle a job failure.
      *
      * @param  UploadableModelHasCreated $event
-     * @param  \Exception                $exception
+     * @param  \Exception $exception
      * @return void
      */
-    public function failed(UploadableModelHasDeleted $event, $exception)
+    public function failed(UploadableModelHasDeleted $event, $exception): void
     {
         throw $exception;
     }
