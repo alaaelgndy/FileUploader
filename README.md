@@ -117,3 +117,5 @@ class User extends Model implements FileUploaderInterface
 - [ ] adding resizing files feature.
 - [ ] add more example of use. 
 - [ ] create custom exception.
+- [ ] create command to clear the useless data in temp folder.
+- [ ] add versioning and changelog file.
