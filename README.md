@@ -119,3 +119,4 @@ class User extends Model implements FileUploaderInterface
 - [ ] create custom exception.
 - [ ] create command to clear the useless data in temp folder.
 - [ ] add versioning and changelog file.
+- [ ] test it on laravel 5.x versions.
