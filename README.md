@@ -120,3 +120,5 @@ class User extends Model implements FileUploaderInterface
 - [ ] create command to clear the useless data in temp folder.
 - [ ] add versioning and changelog file.
 - [ ] test it on laravel 5.x versions.
+- [x] configure the upload route.
+- [x] the ability of assign middlewares to the upload route.
