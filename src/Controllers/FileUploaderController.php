@@ -23,15 +23,4 @@ class FileUploaderController extends Controller
 
         return response()->json($uploded);
     }
-
-    public function move(MoveTempFileRequest $request)
-    {
-        $model = config('elgndy_media.models_namespace') . $request->model;
-        $model = $model::find($request->id);
-
-        $stored = $this->fileUploaderManager->storeTempMediaInRealPath($model, $request->tempPath)
-            ->toArray();
-
-        return response()->json($stored);
-    }
 }
