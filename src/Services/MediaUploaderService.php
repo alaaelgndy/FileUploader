@@ -44,16 +44,11 @@ class MediaUploaderService
     }
 
 
-    public function upload(?string $tempPath = ''): string
+    public function upload(string $tempPath): string
     {
-        $generatedPath = ($tempPath) ? $this->generateTempMediaPath($tempPath) : $this->generateRealPath();
+        $generatedPath = $this->generateTempMediaPath($tempPath);
 
         return $this->media->store($generatedPath);
-    }
-
-    private function generateRealPath(): string
-    {
-        return '';
     }
 
     private function generateTempMediaPath(string $tempPath = ''): string
