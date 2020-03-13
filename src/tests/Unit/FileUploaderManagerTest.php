@@ -43,6 +43,9 @@ class FileUploaderManagerTest extends TestCase
 
         $this->assertArrayHasKey('filePath', $returnedArray);
         $this->assertArrayHasKey('baseUrl', $returnedArray);
+        $this->assertTrue(Storage::exists($returnedArray['filePath']));
+
+        Storage::delete($returnedArray['filePath']);
     }
 
     /**
@@ -57,6 +60,7 @@ class FileUploaderManagerTest extends TestCase
 
         $tableName = (new ModelImplementsFileUploaderInterface())->getTable();
         $this->assertStringStartsWith("temp/{$tableName}/images/", $returnedArray['filePath']);
+        Storage::delete($returnedArray['filePath']);
     }
 
     /**
