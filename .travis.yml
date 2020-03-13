@@ -1,17 +1,17 @@
 language: php
 
 php:
-  - '7.1'
-  - '7.2'
   - '7.3'
+
+services:
+  - mysql
 
 matrix:
   fast_finish: true
 
 before_script:
   - travis_retry composer self-update
-  - composer create-project --prefer-dist laravel/laravel blog "6.*"
-  - composer update
+  - composer create-project --prefer-dist laravel/laravel blog "6.*" --dev
 
 script:
   - cd blog
