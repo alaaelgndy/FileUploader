@@ -143,13 +143,15 @@ class FileUploaderManagerTest extends TestCase
         tap(
             $this->app['db']->connection()->getSchemaBuilder(),
             function ($schema) {
-                $schema->create(
-                    'elgndy_mediaa',
-                    function (Blueprint $table) {
-                        $table->increments('id');
-                        $table->timestamps();
-                    }
-                );
+                if (!$schema->hasTable('elgndy_mediaa')) {
+                    $schema->create(
+                        'elgndy_mediaa',
+                        function (Blueprint $table) {
+                            $table->increments('id');
+                            $table->timestamps();
+                        }
+                    );
+                }
             }
         );
     }
