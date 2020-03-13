@@ -18,12 +18,11 @@ matrix:
 before_script:
   - if [ "$LARAVEL_VERSION" != "" ]; then composer create-project --prefer-dist laravel/laravel ${LARAVEL_VERSION} ${LARAVEL_VERSION}; fi;
   - travis_retry composer self-update
-  - sudo mysql -e "create database ${LARAVEL_VERSION}";
+  - sudo mysql -e 'create database uploader;'
 
 script:
   - cd ${LARAVEL_VERSION}
   - cp ../.env.travis .env
-  - DB_DATABASE=${LARAVEL_VERSION}
   - composer require alaaelgndy/file-uploader
   - php artisan key:generate
   - php artisan migrate
