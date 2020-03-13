@@ -73,10 +73,10 @@ class mediaMoverService
     {
         return $this->mediaModel->create(
             [
-            'model_type' => get_class($this->model),
-            'model_id' => $this->model->id,
-            'file_path' => $this->fullRealPath,
-            'file_type' => $this->getMediaTypeFromTempPath()
+                'model_type' => get_class($this->model),
+                'model_id' => $this->model->id,
+                'file_path' => $this->fullRealPath,
+                'file_type' => $this->mediaType
             ]
         );
     }
