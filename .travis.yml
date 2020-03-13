@@ -12,8 +12,11 @@ matrix:
 before_script:
   - travis_retry composer self-update
   - composer create-project --prefer-dist laravel/laravel blog "6.*" --dev
+  - sudo mysql -e 'create database uploader;'
 
 script:
   - cd blog
+  - cp .env.travis .env
   - composer require alaaelgndy/file-uploader
+  - php artisan key:generate
   - php artisan migrate
