@@ -17,6 +17,7 @@ matrix:
 
 before_script:
   - if [ "$LARAVEL_VERSION" != "" ]; then composer create-project --prefer-dist laravel/laravel ${LARAVEL_VERSION} ${LARAVEL_VERSION}; fi;
+  - if [ "$LARAVEL_VERSION" != "" ]; then sudo mysql -e "create database ${LARAVEL_VERSION};" fi;
   - travis_retry composer self-update
   - sudo mysql -e 'create database ${LARAVEL_VERSION};'
 
