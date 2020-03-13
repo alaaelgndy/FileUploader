@@ -3,7 +3,6 @@
 namespace Elgndy\FileUploader\Tests\Unit;
 
 use Tests\TestCase;
-use Illuminate\Http\UploadedFile;
 use Elgndy\FileUploader\Models\Media;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
@@ -11,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Schema\Blueprint;
 use Elgndy\FileUploader\FileUploaderManager;
 use Illuminate\Foundation\Testing\WithFaker;
+use Elgndy\FileUploader\Tests\Traits\FileFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Elgndy\FileUploader\Events\UploadableModelHasCreated;
 use Elgndy\FileUploader\Events\UploadableModelHasDeleted;
@@ -18,7 +18,9 @@ use Elgndy\FileUploader\Tests\Models\ModelImplementsFileUploaderInterface;
 
 class FileUploaderManagerTest extends TestCase
 {
-    use WithFaker, RefreshDatabase;
+    use WithFaker;
+    use RefreshDatabase;
+    use FileFaker;
 
     private $fileUploaderManager;
 
@@ -130,11 +132,6 @@ class FileUploaderManagerTest extends TestCase
             'mediaType' => 'images',
             'media' => $this->fileFaker()
         ];
-    }
-
-    private function fileFaker()
-    {
-        return UploadedFile::fake()->image(md5($this->faker->name) . '.png');
     }
 
     private function createTableInDB()
