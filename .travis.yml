@@ -16,7 +16,7 @@ before_script:
 
 script:
   - cd blog
-  - cp .env.travis .env
+  - cp ../.env.travis .env
   - composer require alaaelgndy/file-uploader
   - php artisan key:generate
   - php artisan migrate
