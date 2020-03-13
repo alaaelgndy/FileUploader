@@ -4,7 +4,6 @@ php:
   - '7.2'
 
 env:  
-  - LARAVEL_VERSION=5.5.*  
   - LARAVEL_VERSION=5.6.*  
   - LARAVEL_VERSION=5.7.*  
   - LARAVEL_VERSION=5.8.*  
@@ -19,11 +18,12 @@ matrix:
 before_script:
   - if [ "$LARAVEL_VERSION" != "" ]; then composer create-project --prefer-dist laravel/laravel ${LARAVEL_VERSION} ${LARAVEL_VERSION}; fi;
   - travis_retry composer self-update
-  - sudo mysql -e 'create database uploader;'
+  - sudo mysql -e 'create database ${LARAVEL_VERSION};'
 
 script:
   - cd ${LARAVEL_VERSION}
   - cp ../.env.travis .env
+  - DB_DATABASE=${LARAVEL_VERSION}
   - composer require alaaelgndy/file-uploader
   - php artisan key:generate
   - php artisan migrate
