@@ -20,3 +20,4 @@ script:
   - composer require alaaelgndy/file-uploader
   - php artisan key:generate
   - php artisan migrate
+  - ./vendor/bin/phpunit vendor/alaaelgndy/file-uploader/src/tests/Unit/*
