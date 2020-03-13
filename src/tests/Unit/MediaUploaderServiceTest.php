@@ -12,7 +12,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Elgndy\FileUploader\Services\MediaUploaderService;
 use Elgndy\FileUploader\Tests\Traits\InaccessibleMethodsInvoker;
 use Elgndy\FileUploader\Tests\Models\ModelImplementsFileUploaderInterface;
-use Elgndy\FileUploader\Tests\Models\ModelNotImplementsFileUploaderInterface;
 
 class MediaUploaderServiceTest extends TestCase
 {
