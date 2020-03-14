@@ -23,7 +23,7 @@ before_script:
 script:
   - cd ${LARAVEL_VERSION}
   - cp ../.env.travis .env
-  - composer require alaaelgndy/file-uploader:$TRAVIS_PULL_REQUEST_BRANCH
+  - composer require alaaelgndy/file-uploader:dev-$TRAVIS_PULL_REQUEST_BRANCH
   - php artisan key:generate
   - php artisan migrate
   - ./vendor/bin/phpunit vendor/alaaelgndy/file-uploader/src/tests/Unit/.
