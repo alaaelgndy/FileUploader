@@ -11,10 +11,11 @@ use Elgndy\FileUploader\FileUploaderManager;
 use Illuminate\Foundation\Testing\WithFaker;
 use Elgndy\FileUploader\Tests\Traits\FileFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Elgndy\FileUploader\Tests\Traits\CreateTableInDb;
 use Elgndy\FileUploader\Events\UploadableModelHasCreated;
 use Elgndy\FileUploader\Events\UploadableModelHasDeleted;
 use Elgndy\FileUploader\Tests\Models\ModelImplementsFileUploaderInterface;
-use Elgndy\FileUploader\Tests\Traits\CreateTableInDb;
+use Elgndy\FileUploader\Tests\Traits\RemoveCreatedFiles;
 
 class FileUploaderManagerTest extends TestCase
 {
@@ -22,6 +23,7 @@ class FileUploaderManagerTest extends TestCase
     use RefreshDatabase;
     use FileFaker;
     use CreateTableInDb;
+    use RemoveCreatedFiles;
 
     private $fileUploaderManager;
 
@@ -29,6 +31,7 @@ class FileUploaderManagerTest extends TestCase
     {
         $this->fileUploaderManager = app()->make(FileUploaderManager::class);
         parent::setUp();
+        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
         $this->createTableInDB('elgndy_mediaa');
     }
 
@@ -37,7 +40,6 @@ class FileUploaderManagerTest extends TestCase
      */
     public function it_can_upload_file_in_the_temp_storage()
     {
-        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
         $data = $this->prepareDataForUploading();
 
         $returnedArray = $this->fileUploaderManager->uploadTheTempFile($data);
@@ -45,8 +47,6 @@ class FileUploaderManagerTest extends TestCase
         $this->assertArrayHasKey('filePath', $returnedArray);
         $this->assertArrayHasKey('baseUrl', $returnedArray);
         $this->assertTrue(Storage::exists($returnedArray['filePath']));
-
-        Storage::delete($returnedArray['filePath']);
     }
 
     /**
@@ -54,14 +54,12 @@ class FileUploaderManagerTest extends TestCase
      */
     public function it_uploads_the_temp_file_in_a_righ_path()
     {
-        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
         $data = $this->prepareDataForUploading();
 
         $returnedArray = $this->fileUploaderManager->uploadTheTempFile($data);
 
         $tableName = (new ModelImplementsFileUploaderInterface())->getTable();
         $this->assertStringStartsWith("temp/{$tableName}/images/", $returnedArray['filePath']);
-        Storage::delete($returnedArray['filePath']);
     }
 
     /**
@@ -69,7 +67,6 @@ class FileUploaderManagerTest extends TestCase
      */
     public function it_can_store_the_temp_file_in_the_real_path()
     {
-        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
         $data = $this->prepareDataForUploading();
 
         $returnedArray = $this->fileUploaderManager->uploadTheTempFile($data);
@@ -91,7 +88,6 @@ class FileUploaderManagerTest extends TestCase
      */
     public function it_can_store_the_file_using_the_event_listener()
     {
-        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
         $data = $this->prepareDataForUploading();
 
         $returnedArray = $this->fileUploaderManager->uploadTheTempFile($data);
@@ -107,7 +103,6 @@ class FileUploaderManagerTest extends TestCase
      */
     public function it_can_remove_media_folder_when_the_related_model_has_been_removed_using_event()
     {
-        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
         $newModelRecord = ModelImplementsFileUploaderInterface::create([]);
         $this->createMediaFactory(5, $newModelRecord);
 

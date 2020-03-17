@@ -12,11 +12,12 @@ use Elgndy\FileUploader\Tests\Traits\FileFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Elgndy\FileUploader\Services\MediaMoverService;
 use Elgndy\FileUploader\Services\MediaDeleterService;
+use Elgndy\FileUploader\Tests\Traits\CreateTableInDb;
 use Elgndy\FileUploader\Services\MediaUploaderService;
+use Elgndy\FileUploader\Tests\Traits\RemoveCreatedFiles;
 use Elgndy\FileUploader\Tests\Traits\InaccessibleMethodsInvoker;
 use Elgndy\FileUploader\Tests\Models\ModelImplementsFileUploaderInterface;
 use Elgndy\FileUploader\Tests\Models\ModelNotImplementsFileUploaderInterface;
-use Elgndy\FileUploader\Tests\Traits\CreateTableInDb;
 
 class MediaDeleterServiceTest extends TestCase
 {
@@ -25,6 +26,7 @@ class MediaDeleterServiceTest extends TestCase
     use FileFaker;
     use InaccessibleMethodsInvoker;
     use CreateTableInDb;
+    use RemoveCreatedFiles;
 
     private $mediaMoverService;
     
@@ -38,6 +40,7 @@ class MediaDeleterServiceTest extends TestCase
         $this->mediaMoverService = app()->make(MediaMoverService::class);
         $this->mediaDeleterService = app()->make(MediaDeleterService::class);
         parent::setUp();
+        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
         $this->createTableInDB('elgndy_mediaa');
     }
 
@@ -106,8 +109,6 @@ class MediaDeleterServiceTest extends TestCase
 
     private function generateUploadedMedia($model)
     {
-        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
-        
         $data = [
             'tempMedia' => $this->generateTempMedia(),
             'model' => $model,
@@ -120,8 +121,6 @@ class MediaDeleterServiceTest extends TestCase
 
     private function generateTempMedia()
     {
-        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
-
         $validated = $this->mediaUploaderService->validatePassedDataForTempMedia([
             'model' => 'ModelImplementsFileUploaderInterface',
             'media' => $this->fileFaker(),

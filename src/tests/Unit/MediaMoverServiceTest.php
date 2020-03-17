@@ -11,10 +11,11 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Elgndy\FileUploader\Tests\Traits\FileFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Elgndy\FileUploader\Services\MediaMoverService;
+use Elgndy\FileUploader\Tests\Traits\CreateTableInDb;
 use Elgndy\FileUploader\Services\MediaUploaderService;
+use Elgndy\FileUploader\Tests\Traits\RemoveCreatedFiles;
 use Elgndy\FileUploader\Tests\Traits\InaccessibleMethodsInvoker;
 use Elgndy\FileUploader\Tests\Models\ModelImplementsFileUploaderInterface;
-use Elgndy\FileUploader\Tests\Traits\CreateTableInDb;
 
 class MediaMoverServiceTest extends TestCase
 {
@@ -23,6 +24,7 @@ class MediaMoverServiceTest extends TestCase
     use FileFaker;
     use InaccessibleMethodsInvoker;
     use CreateTableInDb;
+    use RemoveCreatedFiles;
 
     private $mediaMoverService;
     
@@ -33,6 +35,7 @@ class MediaMoverServiceTest extends TestCase
         $this->mediaMoverService = app()->make(MediaMoverService::class);
         $this->mediaUploaderService = app()->make(MediaUploaderService::class);
         parent::setUp();
+        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
         $this->createTableInDB('elgndy_mediaa');
     }
 
@@ -142,8 +145,6 @@ class MediaMoverServiceTest extends TestCase
 
     private function generateRequiredData()
     {
-        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
-        
         return [
             'tempMedia' => $this->generateTempMedia(),
             'model' => ModelImplementsFileUploaderInterface::create([]),
@@ -152,8 +153,6 @@ class MediaMoverServiceTest extends TestCase
 
     private function generateTempMedia()
     {
-        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
-
         $validated = $this->mediaUploaderService->validatePassedDataForTempMedia([
             'model' => 'ModelImplementsFileUploaderInterface',
             'media' => $this->fileFaker(),
