@@ -53,7 +53,6 @@ class mediaMoverService
         $this->mediaModel = $media;
     }
 
-
     public function validateBeforeMove(array $data): self
     {
         return $this->checkTempMediaExistence($data['tempMedia'])

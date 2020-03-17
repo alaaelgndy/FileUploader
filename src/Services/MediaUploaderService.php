@@ -51,7 +51,7 @@ class MediaUploaderService
         return $this->media->store($generatedPath);
     }
 
-    private function generateTempMediaPath(string $tempPath = ''): string
+    private function generateTempMediaPath(string $tempPath): string
     {
         $path = $tempPath;
         $path .= $this->model->getTable() . '/' . $this->mediaType;

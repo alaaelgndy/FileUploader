@@ -3,22 +3,27 @@
 namespace Elgndy\FileUploader\Tests\Unit;
 
 use Tests\TestCase;
-use Illuminate\Http\UploadedFile;
 use Elgndy\FileUploader\Models\Media;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Schema\Blueprint;
 use Elgndy\FileUploader\FileUploaderManager;
 use Illuminate\Foundation\Testing\WithFaker;
+use Elgndy\FileUploader\Tests\Traits\FileFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Elgndy\FileUploader\Tests\Traits\CreateTableInDb;
 use Elgndy\FileUploader\Events\UploadableModelHasCreated;
 use Elgndy\FileUploader\Events\UploadableModelHasDeleted;
 use Elgndy\FileUploader\Tests\Models\ModelImplementsFileUploaderInterface;
+use Elgndy\FileUploader\Tests\Traits\RemoveCreatedFiles;
 
 class FileUploaderManagerTest extends TestCase
 {
-    use WithFaker, RefreshDatabase;
+    use WithFaker;
+    use RefreshDatabase;
+    use FileFaker;
+    use CreateTableInDb;
+    use RemoveCreatedFiles;
 
     private $fileUploaderManager;
 
@@ -26,7 +31,8 @@ class FileUploaderManagerTest extends TestCase
     {
         $this->fileUploaderManager = app()->make(FileUploaderManager::class);
         parent::setUp();
-        $this->createTableInDB();
+        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
+        $this->createTableInDB('elgndy_mediaa');
     }
 
     /**
@@ -34,13 +40,13 @@ class FileUploaderManagerTest extends TestCase
      */
     public function it_can_upload_file_in_the_temp_storage()
     {
-        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
         $data = $this->prepareDataForUploading();
 
         $returnedArray = $this->fileUploaderManager->uploadTheTempFile($data);
 
         $this->assertArrayHasKey('filePath', $returnedArray);
         $this->assertArrayHasKey('baseUrl', $returnedArray);
+        $this->assertTrue(Storage::exists($returnedArray['filePath']));
     }
 
     /**
@@ -48,7 +54,6 @@ class FileUploaderManagerTest extends TestCase
      */
     public function it_uploads_the_temp_file_in_a_righ_path()
     {
-        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
         $data = $this->prepareDataForUploading();
 
         $returnedArray = $this->fileUploaderManager->uploadTheTempFile($data);
@@ -62,7 +67,6 @@ class FileUploaderManagerTest extends TestCase
      */
     public function it_can_store_the_temp_file_in_the_real_path()
     {
-        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
         $data = $this->prepareDataForUploading();
 
         $returnedArray = $this->fileUploaderManager->uploadTheTempFile($data);
@@ -84,7 +88,6 @@ class FileUploaderManagerTest extends TestCase
      */
     public function it_can_store_the_file_using_the_event_listener()
     {
-        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
         $data = $this->prepareDataForUploading();
 
         $returnedArray = $this->fileUploaderManager->uploadTheTempFile($data);
@@ -100,7 +103,6 @@ class FileUploaderManagerTest extends TestCase
      */
     public function it_can_remove_media_folder_when_the_related_model_has_been_removed_using_event()
     {
-        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
         $newModelRecord = ModelImplementsFileUploaderInterface::create([]);
         $this->createMediaFactory(5, $newModelRecord);
 
@@ -130,29 +132,5 @@ class FileUploaderManagerTest extends TestCase
             'mediaType' => 'images',
             'media' => $this->fileFaker()
         ];
-    }
-
-    private function fileFaker()
-    {
-        return UploadedFile::fake()->image(md5($this->faker->name) . '.png');
-    }
-
-    private function createTableInDB()
-    {
-
-        tap(
-            $this->app['db']->connection()->getSchemaBuilder(),
-            function ($schema) {
-                if (!$schema->hasTable('elgndy_mediaa')) {
-                    $schema->create(
-                        'elgndy_mediaa',
-                        function (Blueprint $table) {
-                            $table->increments('id');
-                            $table->timestamps();
-                        }
-                    );
-                }
-            }
-        );
     }
 }

@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class ModelNotImplementsFileUploaderInterface extends Model
 {
-    protected $table = 'elgndy_modelb';
+    protected $table = 'elgndy_mediaa';
 }
