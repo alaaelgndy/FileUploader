@@ -2,6 +2,7 @@
 
 namespace Elgndy\FileUploader\Tests\Unit;
 
+use Elgndy\FileUploader\Models\Media;
 use Tests\TestCase;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
@@ -10,8 +11,10 @@ use Elgndy\FileUploader\Tests\Traits\FileFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Elgndy\FileUploader\Services\MediaMoverService;
 use Elgndy\FileUploader\Services\MediaUploaderService;
+use Elgndy\FileUploader\Tests\Models\ModelImplementsFileUploaderInterface;
 use Elgndy\FileUploader\Tests\Traits\InaccessibleMethodsInvoker;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 
 class MediaMoverServiceTest extends TestCase
 {
@@ -29,6 +32,30 @@ class MediaMoverServiceTest extends TestCase
         $this->mediaMoverService = app()->make(MediaMoverService::class);
         $this->mediaUploaderService = app()->make(MediaUploaderService::class);
         parent::setUp();
+    }
+
+    /** @test */
+    public function it_moves_the_temp_file_to_the_real_path()
+    {
+        $generatedData = $this->generateRequiredData();
+        $validated = $this->mediaMoverService->validateBeforeMove($generatedData);
+
+        $movedTo = $validated->move();
+
+        $this->assertTrue(Storage::exists($movedTo));
+    }
+
+    /** @test */
+    public function it_saves_the_media_in_database()
+    {
+        $generatedData = $this->generateRequiredData();
+        $validated = $this->mediaMoverService->validateBeforeMove($generatedData);
+
+        $saved = $validated->saveInDb();
+
+        $this->assertEquals(Media::count(), 1);
+        $this->assertEquals($saved->model_type, get_class($generatedData['model']));
+        $this->assertEquals($saved->model_id, $generatedData['model']->id);
     }
 
     /** @test */
@@ -56,6 +83,69 @@ class MediaMoverServiceTest extends TestCase
             'checkTempMediaExistence',
             [$this->faker->name]
         );
+    }
+
+    /** @test */
+    public function it_extracts_media_type_from_temp_path()
+    {
+        $generatedData = $this->generateRequiredData();
+        $validated = $this->mediaMoverService->validateBeforeMove($generatedData);
+
+        $mediaType = $this->invokeMethod(
+            $validated,
+            'getMediaTypeFromTempPath',
+            []
+        );
+
+        $this->assertEquals($mediaType, explode('/', $generatedData['tempMedia'])[2]);
+    }
+
+    /** @test */
+    public function it_generates_full_real_path()
+    {
+        $generatedData = $this->generateRequiredData();
+        $validated = $this->mediaMoverService->validateBeforeMove($generatedData);
+
+        $generatedFullRealPath = $this->invokeMethod(
+            $validated,
+            'generateTheFullRealPath',
+            []
+        );
+
+        $tempPathInArray = explode('/', $generatedData['tempMedia']);
+
+        $expectedRealPath = $generatedData['model']->getTable() . '/';
+        $expectedRealPath .= $generatedData['model']->id . '/';
+        $expectedRealPath .=   $tempPathInArray[2] . '/';
+        $expectedRealPath .= end($tempPathInArray);
+
+        $this->assertEquals($generatedFullRealPath, $expectedRealPath);
+    }
+
+    /** @test */
+    public function it_can_extract_media_name_from_temp_path()
+    {
+        $generatedData = $this->generateRequiredData();
+        $validated = $this->mediaMoverService->validateBeforeMove($generatedData);
+
+        $mediaName = $this->invokeMethod(
+            $validated,
+            'getMediaNameFromTempPath',
+            []
+        );
+        $expectedMediaName = explode('/', $generatedData['tempMedia']);
+
+        $this->assertEquals(end($expectedMediaName), $mediaName);
+    }
+
+    private function generateRequiredData()
+    {
+        Config::set('elgndy_media.models_namespace', 'Elgndy\\FileUploader\\Tests\\Models\\');
+        
+        return [
+            'tempMedia' => $this->generateTempMedia(),
+            'model' => ModelImplementsFileUploaderInterface::create([]),
+        ];
     }
 
     private function generateTempMedia()
