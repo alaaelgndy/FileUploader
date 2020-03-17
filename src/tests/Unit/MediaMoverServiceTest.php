@@ -2,19 +2,19 @@
 
 namespace Elgndy\FileUploader\Tests\Unit;
 
-use Elgndy\FileUploader\Models\Media;
+use Exception;
 use Tests\TestCase;
+use Elgndy\FileUploader\Models\Media;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\WithFaker;
 use Elgndy\FileUploader\Tests\Traits\FileFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Elgndy\FileUploader\Services\MediaMoverService;
 use Elgndy\FileUploader\Services\MediaUploaderService;
-use Elgndy\FileUploader\Tests\Models\ModelImplementsFileUploaderInterface;
 use Elgndy\FileUploader\Tests\Traits\InaccessibleMethodsInvoker;
-use Exception;
-use Illuminate\Database\Eloquent\Model;
+use Elgndy\FileUploader\Tests\Models\ModelImplementsFileUploaderInterface;
 
 class MediaMoverServiceTest extends TestCase
 {
@@ -32,6 +32,7 @@ class MediaMoverServiceTest extends TestCase
         $this->mediaMoverService = app()->make(MediaMoverService::class);
         $this->mediaUploaderService = app()->make(MediaUploaderService::class);
         parent::setUp();
+        $this->createTableInDB();
     }
 
     /** @test */
@@ -159,5 +160,24 @@ class MediaMoverServiceTest extends TestCase
         ]);
 
         return $validated->upload(config('elgndy_media.temp_path'));
+    }
+
+    private function createTableInDB()
+    {
+
+        tap(
+            $this->app['db']->connection()->getSchemaBuilder(),
+            function ($schema) {
+                if (!$schema->hasTable('elgndy_mediaa')) {
+                    $schema->create(
+                        'elgndy_mediaa',
+                        function (Blueprint $table) {
+                            $table->increments('id');
+                            $table->timestamps();
+                        }
+                    );
+                }
+            }
+        );
     }
 }
