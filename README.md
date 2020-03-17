@@ -122,4 +122,3 @@ class User extends Model implements FileUploaderInterface
 - [x] test it on laravel 5.6 or greater versions (using CI).
 - [x] configure the upload route.
 - [x] the ability of assign middlewares to the upload route.
-- [ ] remove the created tables and files for tests.
