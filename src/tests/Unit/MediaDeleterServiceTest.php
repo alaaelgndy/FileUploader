@@ -7,7 +7,6 @@ use Tests\TestCase;
 use Elgndy\FileUploader\Models\Media;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Foundation\Testing\WithFaker;
 use Elgndy\FileUploader\Tests\Traits\FileFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -17,6 +16,7 @@ use Elgndy\FileUploader\Services\MediaUploaderService;
 use Elgndy\FileUploader\Tests\Traits\InaccessibleMethodsInvoker;
 use Elgndy\FileUploader\Tests\Models\ModelImplementsFileUploaderInterface;
 use Elgndy\FileUploader\Tests\Models\ModelNotImplementsFileUploaderInterface;
+use Elgndy\FileUploader\Tests\Traits\CreateTableInDb;
 
 class MediaDeleterServiceTest extends TestCase
 {
@@ -24,6 +24,7 @@ class MediaDeleterServiceTest extends TestCase
     use RefreshDatabase;
     use FileFaker;
     use InaccessibleMethodsInvoker;
+    use CreateTableInDb;
 
     private $mediaMoverService;
     
@@ -37,7 +38,7 @@ class MediaDeleterServiceTest extends TestCase
         $this->mediaMoverService = app()->make(MediaMoverService::class);
         $this->mediaDeleterService = app()->make(MediaDeleterService::class);
         parent::setUp();
-        $this->createTableInDB();
+        $this->createTableInDB('elgndy_mediaa');
     }
 
     /** @test */
@@ -82,7 +83,26 @@ class MediaDeleterServiceTest extends TestCase
         $validated->deleteFromDb();
         $afterDelete = Media::count();
         $this->assertTrue($beforeDelete !== $afterDelete);
-    }   
+    }
+
+    /** @test */
+    public function it_can_expect_the_folder_of_row_correctly()
+    {
+        $model = ModelImplementsFileUploaderInterface::create([]);
+        $this->generateUploadedMedia($model);
+
+        $validated = $this->mediaDeleterService->validateBeforeDelete($model);
+
+        $folder = $this->invokeMethod(
+            $validated,
+            'getTheFolder',
+            []
+        );
+
+        $expected = $model->getTable() . '/' . $model->id;
+
+        $this->assertEquals($folder, $expected);
+    }
 
     private function generateUploadedMedia($model)
     {
@@ -109,23 +129,5 @@ class MediaDeleterServiceTest extends TestCase
         ]);
 
         return $validated->upload(config('elgndy_media.temp_path'));
-    }
-
-    private function createTableInDB()
-    {
-        tap(
-            $this->app['db']->connection()->getSchemaBuilder(),
-            function ($schema) {
-                if (!$schema->hasTable('elgndy_mediaa')) {
-                    $schema->create(
-                        'elgndy_mediaa',
-                        function (Blueprint $table) {
-                            $table->increments('id');
-                            $table->timestamps();
-                        }
-                    );
-                }
-            }
-        );
     }
 }

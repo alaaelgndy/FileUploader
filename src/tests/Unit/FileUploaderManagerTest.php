@@ -7,7 +7,6 @@ use Elgndy\FileUploader\Models\Media;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Database\Schema\Blueprint;
 use Elgndy\FileUploader\FileUploaderManager;
 use Illuminate\Foundation\Testing\WithFaker;
 use Elgndy\FileUploader\Tests\Traits\FileFaker;
@@ -15,12 +14,14 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Elgndy\FileUploader\Events\UploadableModelHasCreated;
 use Elgndy\FileUploader\Events\UploadableModelHasDeleted;
 use Elgndy\FileUploader\Tests\Models\ModelImplementsFileUploaderInterface;
+use Elgndy\FileUploader\Tests\Traits\CreateTableInDb;
 
 class FileUploaderManagerTest extends TestCase
 {
     use WithFaker;
     use RefreshDatabase;
     use FileFaker;
+    use CreateTableInDb;
 
     private $fileUploaderManager;
 
@@ -28,7 +29,7 @@ class FileUploaderManagerTest extends TestCase
     {
         $this->fileUploaderManager = app()->make(FileUploaderManager::class);
         parent::setUp();
-        $this->createTableInDB();
+        $this->createTableInDB('elgndy_mediaa');
     }
 
     /**
@@ -136,24 +137,5 @@ class FileUploaderManagerTest extends TestCase
             'mediaType' => 'images',
             'media' => $this->fileFaker()
         ];
-    }
-
-    private function createTableInDB()
-    {
-
-        tap(
-            $this->app['db']->connection()->getSchemaBuilder(),
-            function ($schema) {
-                if (!$schema->hasTable('elgndy_mediaa')) {
-                    $schema->create(
-                        'elgndy_mediaa',
-                        function (Blueprint $table) {
-                            $table->increments('id');
-                            $table->timestamps();
-                        }
-                    );
-                }
-            }
-        );
     }
 }
