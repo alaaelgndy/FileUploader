@@ -123,4 +123,5 @@ class User extends Model implements FileUploaderInterface
 - [x] configure the upload route.
 - [x] the ability of assign middlewares to the upload route.
 - [ ] add feature test to the API.
-- [ ] translate the exceptions.
+- [x] translate the exceptions.
+- [ ] use directory seperator constants instead of /.
