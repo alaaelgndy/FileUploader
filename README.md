@@ -113,7 +113,7 @@ class User extends Model implements FileUploaderInterface
 
 ## ToDo
 - [ ] enhance the readme file.
-- [ ] increase the unit test coverage.
+- [x] increase the unit test coverage.
 - [ ] adding resizing files feature.
 - [ ] add more example of use. 
 - [ ] create custom exception.
@@ -122,3 +122,5 @@ class User extends Model implements FileUploaderInterface
 - [x] test it on laravel 5.6 or greater versions (using CI).
 - [x] configure the upload route.
 - [x] the ability of assign middlewares to the upload route.
+- [ ] add feature test to the API.
+- [ ] translate the exceptions.
