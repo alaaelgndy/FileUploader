@@ -16,6 +16,7 @@ class FileUploaderServiceProvider extends ServiceProvider
     {
         $this->loadMigrationsFrom(__DIR__ . '/migrations');
         $this->loadRoutesFrom(__DIR__ . '/routes/api.php');
+        $this->loadTranslationsFrom(__DIR__ . '/lang', 'FileUploader');
 
         $this->publishes(
             [
