@@ -23,6 +23,10 @@ class FileUploaderServiceProvider extends ServiceProvider
             __DIR__ . '/Config/elgndy_media.php' => config_path('elgndy_media.php'),
             ]
         );
+
+        $this->publishes([
+            __DIR__ . '/lang' => resource_path('lang/vendor/FileUploader'),
+        ]);
     }
 
     /**
