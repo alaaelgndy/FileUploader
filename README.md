@@ -116,7 +116,7 @@ class User extends Model implements FileUploaderInterface
 - [x] increase the unit test coverage.
 - [ ] adding resizing files feature.
 - [ ] add more example of use. 
-- [ ] create custom exception.
+- [x] create custom response for the api in exceptions case.
 - [ ] create command to clear the useless data in temp folder.
 - [ ] add versioning and changelog file.
 - [x] test it on laravel 5.6 or greater versions (using CI).

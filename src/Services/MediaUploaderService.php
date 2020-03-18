@@ -5,7 +5,6 @@ namespace Elgndy\FileUploader\Services;
 use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 use Elgndy\FileUploader\Contracts\FileUploaderInterface;
 
 class MediaUploaderService

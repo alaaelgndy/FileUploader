@@ -2,9 +2,9 @@
 
 namespace Elgndy\FileUploader\Controllers;
 
+use Exception;
 use App\Http\Controllers\Controller;
 use Elgndy\FileUploader\FileUploaderManager;
-use Elgndy\FileUploader\Requests\MoveTempFileRequest;
 use Elgndy\FileUploader\Requests\CreateTempFileRequest;
 
 class FileUploaderController extends Controller
@@ -19,8 +19,13 @@ class FileUploaderController extends Controller
 
     public function store(CreateTempFileRequest $request)
     {
-        $uploded = $this->fileUploaderManager->uploadTheTempFile($request->validated());
+        try {
+            $uploded = $this->fileUploaderManager->uploadTheTempFile($request->validated());
 
-        return response()->json($uploded);
+            return response()->json($uploded);
+        } catch (Exception $th) {
+            return response()->json(['error' => $th->getMessage()], 400);
+        }
+
     }
 }
