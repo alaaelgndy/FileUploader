@@ -9,25 +9,24 @@ use Elgndy\FileUploader\Contracts\FileUploaderInterface;
 
 class MediaUploaderService
 {
-
     /**
-     * Model Object 
-     * 
-     * @example \App\Models\User 
+     * Model Object.
+     *
+     * @example \App\Models\User
      *
      * @var Model
      */
     private $model;
 
     /**
-     * media file
+     * media file.
      *
      * @var UploadedFile
      */
     private $media;
 
     /**
-     * Media type
+     * Media type.
      *
      * @var string
      */
@@ -42,7 +41,6 @@ class MediaUploaderService
             ->setTheProperties($data);
     }
 
-
     public function upload(string $tempPath): string
     {
         $generatedPath = $this->generateTempMediaPath($tempPath);
@@ -53,7 +51,7 @@ class MediaUploaderService
     private function generateTempMediaPath(string $tempPath): string
     {
         $path = $tempPath;
-        $path .= $this->model->getTable() . '/' . $this->mediaType;
+        $path .= $this->model->getTable().DIRECTORY_SEPARATOR.$this->mediaType;
 
         return $path;
     }
@@ -64,11 +62,11 @@ class MediaUploaderService
 
         if (!class_exists($fullModelNamespace)) {
             throw new Exception(trans(
-                'FileUploader::exceptions.model_not_exist', 
+                'FileUploader::exceptions.model_not_exist',
                 ['modelName' => $modelName]
             ));
         } else {
-            $this->model = new $fullModelNamespace;
+            $this->model = new $fullModelNamespace();
         }
 
         return $this;
@@ -76,14 +74,14 @@ class MediaUploaderService
 
     private function getPassedModelWithNamespace(string $modelName): string
     {
-        return config('elgndy_media.models_namespace') . $modelName;
+        return config('elgndy_media.models_namespace').$modelName;
     }
 
     private function isThisModelReadyForUse(): self
     {
         if (!$this->model instanceof FileUploaderInterface) {
             throw new Exception(trans(
-                "FileUploader::exceptions.model_not_impelements_interface",
+                'FileUploader::exceptions.model_not_impelements_interface',
                 ['modelName' => get_class($this->model), 'interface' => FileUploaderInterface::class]
             ));
         }
@@ -98,7 +96,7 @@ class MediaUploaderService
         if (!in_array($mediaType, $allMediaType)) {
             $stringOfAvailableMediaTypes = implode(' or ', $allMediaType);
             throw new Exception(trans(
-                "FileUploader::exceptions.not_available_media_type",
+                'FileUploader::exceptions.not_available_media_type',
                 ['modelName' => get_class($this->model), 'availableMediaTypes' => $stringOfAvailableMediaTypes]
             ));
         }
@@ -115,7 +113,7 @@ class MediaUploaderService
         if (!in_array($passedMediaExtensionType, $availableExtensionsForPassedMediaType)) {
             $stringOfAvailableExtensions = implode(' or ', $availableExtensionsForPassedMediaType);
             throw new Exception(trans(
-                "FileUploader::exceptions.not_available_extension",
+                'FileUploader::exceptions.not_available_extension',
                 ['mediaType' => $mediaType, 'availableExtensions' => $stringOfAvailableExtensions]
             ));
         }

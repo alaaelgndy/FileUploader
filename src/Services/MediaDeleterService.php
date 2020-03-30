@@ -22,7 +22,7 @@ class MediaDeleterService
         $check = $model instanceof FileUploaderInterface;
 
         throw_if(!$check, new Exception(trans(
-            "FileUploader::exceptions.model_not_impelements_interface",
+            'FileUploader::exceptions.model_not_impelements_interface',
             ['modelName' => get_class($model), 'interface' => FileUploaderInterface::class]
         )));
 
@@ -43,13 +43,13 @@ class MediaDeleterService
 
     private function getTheFolder(): string
     {
-        return $this->model->getTable() . '/' . $this->model->id;
+        return $this->model->getTable().DIRECTORY_SEPARATOR.$this->model->id;
     }
-
 
     private function setProperties(Model $model): self
     {
         $this->model = $model;
+
         return $this;
     }
 }
