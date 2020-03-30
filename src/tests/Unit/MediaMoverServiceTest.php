@@ -27,7 +27,7 @@ class MediaMoverServiceTest extends TestCase
     use RemoveCreatedFiles;
 
     private $mediaMoverService;
-    
+
     private $mediaUploaderService;
 
     protected function setUp(): void
@@ -119,9 +119,9 @@ class MediaMoverServiceTest extends TestCase
 
         $tempPathInArray = explode('/', $generatedData['tempMedia']);
 
-        $expectedRealPath = $generatedData['model']->getTable() . '/';
-        $expectedRealPath .= $generatedData['model']->id . '/';
-        $expectedRealPath .=   $tempPathInArray[2] . '/';
+        $expectedRealPath = $generatedData['model']->getTable().DIRECTORY_SEPARATOR;
+        $expectedRealPath .= $generatedData['model']->id.DIRECTORY_SEPARATOR;
+        $expectedRealPath .= $tempPathInArray[2].DIRECTORY_SEPARATOR;
         $expectedRealPath .= end($tempPathInArray);
 
         $this->assertEquals($generatedFullRealPath, $expectedRealPath);

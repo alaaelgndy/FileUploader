@@ -191,7 +191,7 @@ class MediaUploaderServiceTest extends TestCase
         $tableName = (new ModelImplementsFileUploaderInterface())->getTable();
         $mediaType = $data['mediaType'];
 
-        $tempPathShouldBe = config('elgndy_media.temp_path') . $tableName . '/' . $mediaType;
+        $tempPathShouldBe = config('elgndy_media.temp_path').$tableName.DIRECTORY_SEPARATOR.$mediaType;
 
         $this->assertEquals($generatedPath, $tempPathShouldBe);
     }

@@ -10,39 +10,39 @@ use Illuminate\Support\Facades\Storage;
 class mediaMoverService
 {
     /**
-     * media type
+     * media type.
      *
      * @var string
      */
     private $mediaType;
 
     /**
-     * Related model
+     * Related model.
      *
      * @var Model
      */
     private $model;
 
     /**
-     * temp path
+     * temp path.
      *
      * @example temp/users/mediaType/mediaName.mediaExtension
-     * 
+     *
      * @var string
      */
     private $fullTempPath;
 
     /**
-     * real path
+     * real path.
      *
      * @example users/userId/mediaType/mediaName.mediaExtension
-     * 
+     *
      * @var string
      */
     private $fullRealPath;
 
     /**
-     * our media model
+     * our media model.
      *
      * @var Model
      */
@@ -63,7 +63,7 @@ class mediaMoverService
     {
         $moved = Storage::move($this->fullTempPath, $this->fullRealPath);
 
-        throw_if(!$moved, new Exception(trans("FileUploader::exceptions.move_media")));
+        throw_if(!$moved, new Exception(trans('FileUploader::exceptions.move_media')));
 
         return $this->fullRealPath;
     }
@@ -75,7 +75,7 @@ class mediaMoverService
                 'model_type' => get_class($this->model),
                 'model_id' => $this->model->id,
                 'file_path' => $this->fullRealPath,
-                'file_type' => $this->mediaType
+                'file_type' => $this->mediaType,
             ]
         );
     }
@@ -84,7 +84,7 @@ class mediaMoverService
     {
         $check = Storage::exists($tempMedia);
 
-        throw_if(!$check, new Exception(trans("FileUplader::exceptions.file_not_exist", ['fileName' => $tempMedia])));
+        throw_if(!$check, new Exception(trans('FileUplader::exceptions.file_not_exist', ['fileName' => $tempMedia])));
 
         return $this;
     }
@@ -108,7 +108,7 @@ class mediaMoverService
             return $mediaType;
         } catch (\Throwable $th) {
             throw new Exception(trans(
-                "FileUploader::exceptions.get_media_type_from_temp_path",
+                'FileUploader::exceptions.get_media_type_from_temp_path',
                 ['tempPath' => $this->fullTempPath]
             ));
         }
@@ -120,7 +120,7 @@ class mediaMoverService
         $model_id = $this->model->id;
         $mediaName = $this->getMediaNameFromTempPath();
 
-        return $table . '/' . $model_id . '/' . $this->mediaType . '/' . $mediaName;
+        return $table.DIRECTORY_SEPARATOR.$model_id.DIRECTORY_SEPARATOR.$this->mediaType.DIRECTORY_SEPARATOR.$mediaName;
     }
 
     private function getMediaNameFromTempPath(): string
@@ -132,7 +132,7 @@ class mediaMoverService
             return $mediaName;
         } catch (\Throwable $th) {
             throw new Exception(trans(
-                "FileUploader::exceptions.get_media_name_from_temp_path",
+                'FileUploader::exceptions.get_media_name_from_temp_path',
                 ['tempPath' => $this->fullTempPath]
             ));
         }

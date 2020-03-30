@@ -29,7 +29,7 @@ class MediaDeleterServiceTest extends TestCase
     use RemoveCreatedFiles;
 
     private $mediaMoverService;
-    
+
     private $mediaUploaderService;
 
     private $mediaDeleterService;
@@ -47,8 +47,8 @@ class MediaDeleterServiceTest extends TestCase
     /** @test */
     public function it_validates_the_passed_model()
     {
-        $validated = $this->mediaDeleterService->validateBeforeDelete(new ModelImplementsFileUploaderInterface);
-        
+        $validated = $this->mediaDeleterService->validateBeforeDelete(new ModelImplementsFileUploaderInterface());
+
         $this->assertTrue($validated instanceof $this->mediaDeleterService);
     }
 
@@ -56,7 +56,7 @@ class MediaDeleterServiceTest extends TestCase
     public function it_throws_if_passed_model_does_not_impeletemnts_FileUploaderInterface()
     {
         $this->expectException(Exception::class);
-        $this->mediaDeleterService->validateBeforeDelete(new ModelNotImplementsFileUploaderInterface);
+        $this->mediaDeleterService->validateBeforeDelete(new ModelNotImplementsFileUploaderInterface());
     }
 
     /** @test */
@@ -102,7 +102,7 @@ class MediaDeleterServiceTest extends TestCase
             []
         );
 
-        $expected = $model->getTable() . '/' . $model->id;
+        $expected = $model->getTable().DIRECTORY_SEPARATOR.$model->id;
 
         $this->assertEquals($folder, $expected);
     }
@@ -116,6 +116,7 @@ class MediaDeleterServiceTest extends TestCase
 
         $validated = $this->mediaMoverService->validateBeforeMove($data);
         $validated->saveInDb();
+
         return $validated->move();
     }
 
