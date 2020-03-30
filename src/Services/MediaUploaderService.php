@@ -5,7 +5,6 @@ namespace Elgndy\FileUploader\Services;
 use Exception;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Storage;
 use Elgndy\FileUploader\Contracts\FileUploaderInterface;
 
 class MediaUploaderService
@@ -64,7 +63,10 @@ class MediaUploaderService
         $fullModelNamespace = $this->getPassedModelWithNamespace($modelName);
 
         if (!class_exists($fullModelNamespace)) {
-            throw new Exception("This model {$modelName} is not exist");
+            throw new Exception(trans(
+                'FileUploader::exceptions.model_not_exist', 
+                ['modelName' => $modelName]
+            ));
         } else {
             $this->model = new $fullModelNamespace;
         }
@@ -80,7 +82,10 @@ class MediaUploaderService
     private function isThisModelReadyForUse(): self
     {
         if (!$this->model instanceof FileUploaderInterface) {
-            throw new Exception("This model {$this->model} must implements " . FileUploaderInterface::class);
+            throw new Exception(trans(
+                "FileUploader::exceptions.model_not_impelements_interface",
+                ['modelName' => get_class($this->model), 'interface' => FileUploaderInterface::class]
+            ));
         }
 
         return $this;
@@ -92,7 +97,10 @@ class MediaUploaderService
 
         if (!in_array($mediaType, $allMediaType)) {
             $stringOfAvailableMediaTypes = implode(' or ', $allMediaType);
-            throw new Exception("This model accept these media types only " . $stringOfAvailableMediaTypes);
+            throw new Exception(trans(
+                "FileUploader::exceptions.not_available_media_type",
+                ['modelName' => get_class($this->model), 'availableMediaTypes' => $stringOfAvailableMediaTypes]
+            ));
         }
 
         return $this;
@@ -106,7 +114,10 @@ class MediaUploaderService
 
         if (!in_array($passedMediaExtensionType, $availableExtensionsForPassedMediaType)) {
             $stringOfAvailableExtensions = implode(' or ', $availableExtensionsForPassedMediaType);
-            throw new Exception("This media type accepts these extensions only " . $stringOfAvailableExtensions);
+            throw new Exception(trans(
+                "FileUploader::exceptions.not_available_extension",
+                ['mediaType' => $mediaType, 'availableExtensions' => $stringOfAvailableExtensions]
+            ));
         }
 
         return $this;

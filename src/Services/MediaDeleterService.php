@@ -21,7 +21,10 @@ class MediaDeleterService
     {
         $check = $model instanceof FileUploaderInterface;
 
-        throw_if(!$check, new Exception("The model does not implement " . FileUploaderInterface::class));
+        throw_if(!$check, new Exception(trans(
+            "FileUploader::exceptions.model_not_impelements_interface",
+            ['modelName' => get_class($model), 'interface' => FileUploaderInterface::class]
+        )));
 
         return $this->setProperties($model);
     }

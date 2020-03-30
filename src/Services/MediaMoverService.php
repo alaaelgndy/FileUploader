@@ -63,7 +63,7 @@ class mediaMoverService
     {
         $moved = Storage::move($this->fullTempPath, $this->fullRealPath);
 
-        throw_if(!$moved, new Exception("Could not move the media"));
+        throw_if(!$moved, new Exception(trans("FileUploader::exceptions.move_media")));
 
         return $this->fullRealPath;
     }
@@ -84,7 +84,7 @@ class mediaMoverService
     {
         $check = Storage::exists($tempMedia);
 
-        throw_if(!$check, new Exception("This file is not exist " . $tempMedia));
+        throw_if(!$check, new Exception(trans("FileUplader::exceptions.file_not_exist", ['fileName' => $tempMedia])));
 
         return $this;
     }
@@ -107,7 +107,10 @@ class mediaMoverService
 
             return $mediaType;
         } catch (\Throwable $th) {
-            throw new Exception("Could not extract the media type from the temp path");
+            throw new Exception(trans(
+                "FileUploader::exceptions.get_media_type_from_temp_path",
+                ['tempPath' => $this->fullTempPath]
+            ));
         }
     }
 
@@ -128,7 +131,10 @@ class mediaMoverService
 
             return $mediaName;
         } catch (\Throwable $th) {
-            throw new Exception("Could not extract the media name from the temp path");
+            throw new Exception(trans(
+                "FileUploader::exceptions.get_media_name_from_temp_path",
+                ['tempPath' => $this->fullTempPath]
+            ));
         }
     }
 }
