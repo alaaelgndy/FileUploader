@@ -6,8 +6,7 @@ use ReflectionClass;
 
 trait InaccessibleMethodsInvoker
 {
-
-    protected function invokeMethod(object $obj, string $methodName, array $parameters = [])
+    protected function invokeMethod($obj, string $methodName, array $parameters = [])
     {
         $class = new ReflectionClass(get_class($obj));
         $method = $class->getMethod($methodName);
