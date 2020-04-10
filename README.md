@@ -117,7 +117,7 @@ class User extends Model implements FileUploaderInterface
 - [ ] adding resizing files feature.
 - [ ] add more example of use. 
 - [x] create custom response for the api in exceptions case.
-- [ ] create command to clear the useless data in temp folder.
+- [x] create command to clear the useless data in temp folder.
 - [ ] add versioning and changelog file.
 - [x] test it on laravel 5.6 or greater versions (using CI).
 - [x] configure the upload route.
@@ -125,3 +125,5 @@ class User extends Model implements FileUploaderInterface
 - [ ] add feature test to the API.
 - [x] translate the exceptions.
 - [x] use directory seperator constants instead of '/'.
+- [ ] move array of files at once.
+- [ ] add event to upload and move at once.
