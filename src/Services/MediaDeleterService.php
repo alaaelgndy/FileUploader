@@ -3,10 +3,11 @@
 namespace Elgndy\FileUploader\Services;
 
 use Exception;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
-use Elgndy\FileUploader\Contracts\FileUploaderInterface;
 use Illuminate\Database\Eloquent\Collection;
+use Elgndy\FileUploader\Contracts\FileUploaderInterface;
 
 class MediaDeleterService
 {
@@ -39,6 +40,29 @@ class MediaDeleterService
     public function deleteFromDb(): Collection
     {
         return $this->model->media->each->delete();
+    }
+
+    public function cleanTempFolder(): int
+    {
+        $maxExistanceTimeToRemove = config('elgndy_media.clean_temp', 1);
+
+        $allTempFiles = Storage::allFiles(config('elgndy_media.temp_path'));
+
+        $deletedCounter = 0;
+        $timeNow = Carbon::now();
+
+        foreach ($allTempFiles as $file) {
+            $creationTime = Carbon::createFromTimestamp(Storage::lastModified($file));
+
+            $diff = $timeNow->diffInMinutes($creationTime);
+
+            if ($diff >= $maxExistanceTimeToRemove) {
+                Storage::delete($file);
+                ++$deletedCounter;
+            }
+        }
+
+        return $deletedCounter;
     }
 
     private function getTheFolder(): string
