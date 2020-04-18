@@ -3,7 +3,7 @@
 namespace Elgndy\FileUploader\Commands;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 use Elgndy\FileUploader\Services\MediaDeleterService;
 
 class TempFilesCleaner extends Command
@@ -45,7 +45,18 @@ class TempFilesCleaner extends Command
      */
     public function handle()
     {
-        $removedCount = $this->mediaDeleterService->cleanTempFolder();
-        Log::info('The number of removed files is '.$removedCount);
+        $files = $this->mediaDeleterService->filesShouldBeCleanedInTemp();
+
+        $bar = $this->output->createProgressBar(count($files));
+        $bar->setFormat('very_verbose');
+        $bar->start();
+
+        foreach ($files as $file) {
+            Storage::delete($file);
+
+            $bar->advance();
+        }
+
+        $bar->finish();
     }
 }

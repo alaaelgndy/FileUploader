@@ -42,14 +42,15 @@ class MediaDeleterService
         return $this->model->media->each->delete();
     }
 
-    public function cleanTempFolder(): int
+    public function filesShouldBeCleanedInTemp(): array
     {
         $maxExistanceTimeToRemove = config('elgndy_media.clean_temp', 1);
 
         $allTempFiles = Storage::allFiles(config('elgndy_media.temp_path'));
 
-        $deletedCounter = 0;
         $timeNow = Carbon::now();
+
+        $files = [];
 
         foreach ($allTempFiles as $file) {
             $creationTime = Carbon::createFromTimestamp(Storage::lastModified($file));
@@ -57,12 +58,11 @@ class MediaDeleterService
             $diff = $timeNow->diffInMinutes($creationTime);
 
             if ($diff >= $maxExistanceTimeToRemove) {
-                Storage::delete($file);
-                ++$deletedCounter;
+                $files[] = $file;
             }
         }
 
-        return $deletedCounter;
+        return $files;
     }
 
     private function getTheFolder(): string
