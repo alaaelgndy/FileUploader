@@ -36,7 +36,7 @@ class FileUploaderManagerTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_can_upload_file_in_the_temp_storage()
     {
@@ -50,7 +50,7 @@ class FileUploaderManagerTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_uploads_the_temp_file_in_a_righ_path()
     {
@@ -59,11 +59,11 @@ class FileUploaderManagerTest extends TestCase
         $returnedArray = $this->fileUploaderManager->uploadTheTempFile($data);
 
         $tableName = (new ModelImplementsFileUploaderInterface())->getTable();
-        $this->assertStringStartsWith("temp/{$tableName}/images/", $returnedArray['filePath']);
+        $this->assertStringStartsWith(config('elgndy_media.temp_path', 'temp/')."{$tableName}/images/", $returnedArray['filePath']);
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_can_store_the_temp_file_in_the_real_path()
     {
@@ -84,7 +84,7 @@ class FileUploaderManagerTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_can_store_the_file_using_the_event_listener()
     {
@@ -99,7 +99,7 @@ class FileUploaderManagerTest extends TestCase
     }
 
     /**
-     * @test 
+     * @test
      */
     public function it_can_remove_media_folder_when_the_related_model_has_been_removed_using_event()
     {
@@ -117,20 +117,19 @@ class FileUploaderManagerTest extends TestCase
 
     private function createMediaFactory($count, Model $newModelRecord)
     {
-        for ($i = 0; $i < $count; $i++) {
+        for ($i = 0; $i < $count; ++$i) {
             $data = $this->prepareDataForUploading();
             $returnedArray = $this->fileUploaderManager->uploadTheTempFile($data);
             event(new UploadableModelHasCreated($newModelRecord, $returnedArray['filePath']));
         }
     }
 
-
     private function prepareDataForUploading(): array
     {
         return [
             'model' => 'ModelImplementsFileUploaderInterface',
             'mediaType' => 'images',
-            'media' => $this->fileFaker()
+            'media' => $this->fileFaker(),
         ];
     }
 }
