@@ -43,6 +43,7 @@ class MediaMoverServiceTest extends TestCase
     public function it_moves_the_temp_file_to_the_real_path()
     {
         $generatedData = $this->generateRequiredData();
+        
         $validated = $this->mediaMoverService->validateBeforeMove($generatedData);
 
         $movedTo = $validated->move();
@@ -67,15 +68,14 @@ class MediaMoverServiceTest extends TestCase
     public function it_checks_temp_media_existance()
     {
         $generatedTempMedia = $this->generateTempMedia();
-
         $check = $this->invokeMethod(
             $this->mediaMoverService,
             'checkTempMediaExistence',
-            [$generatedTempMedia]
+            [$generatedTempMedia[0]]
         );
 
         $this->assertTrue($check instanceof $this->mediaMoverService);
-        Storage::delete($generatedTempMedia);
+        Storage::delete($generatedTempMedia[0]);
     }
 
     /** @test */
@@ -146,7 +146,7 @@ class MediaMoverServiceTest extends TestCase
     private function generateRequiredData()
     {
         return [
-            'tempMedia' => $this->generateTempMedia(),
+            'tempMedia' => $this->generateTempMedia()[0],
             'model' => ModelImplementsFileUploaderInterface::create([]),
         ];
     }
@@ -155,7 +155,7 @@ class MediaMoverServiceTest extends TestCase
     {
         $validated = $this->mediaUploaderService->validatePassedDataForTempMedia([
             'model' => 'ModelImplementsFileUploaderInterface',
-            'media' => $this->fileFaker(),
+            'media' => [$this->fileFaker()],
             'mediaType' => 'images',
         ]);
 

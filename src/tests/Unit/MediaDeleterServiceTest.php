@@ -110,7 +110,7 @@ class MediaDeleterServiceTest extends TestCase
     private function generateUploadedMedia($model)
     {
         $data = [
-            'tempMedia' => $this->generateTempMedia(),
+            'tempMedia' => $this->generateTempMedia()[0],
             'model' => $model,
         ];
 
@@ -124,7 +124,7 @@ class MediaDeleterServiceTest extends TestCase
     {
         $validated = $this->mediaUploaderService->validatePassedDataForTempMedia([
             'model' => 'ModelImplementsFileUploaderInterface',
-            'media' => $this->fileFaker(),
+            'media' => [$this->fileFaker()],
             'mediaType' => 'images',
         ]);
 
