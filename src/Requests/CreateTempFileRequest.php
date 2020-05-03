@@ -26,7 +26,8 @@ class CreateTempFileRequest extends FormRequest
         return [
             'model' => 'required|string',
             'mediaType' => 'required|string',
-            'media' => 'required|file'
+            'media' => 'required|array',
+            'media.*' => 'required|file'
         ];
     }
 }
