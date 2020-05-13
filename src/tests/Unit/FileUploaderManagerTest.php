@@ -46,7 +46,7 @@ class FileUploaderManagerTest extends TestCase
 
         $this->assertArrayHasKey('filePath', $returnedArray);
         $this->assertArrayHasKey('baseUrl', $returnedArray);
-        $this->assertTrue(Storage::exists($returnedArray['filePath']));
+        $this->assertTrue(Storage::exists($returnedArray['filePath'][0]));
     }
 
     /**
@@ -59,7 +59,7 @@ class FileUploaderManagerTest extends TestCase
         $returnedArray = $this->fileUploaderManager->uploadTheTempFile($data);
 
         $tableName = (new ModelImplementsFileUploaderInterface())->getTable();
-        $this->assertStringStartsWith(config('elgndy_media.temp_path', 'temp/')."{$tableName}/images/", $returnedArray['filePath']);
+        $this->assertStringStartsWith(config('elgndy_media.temp_path', 'temp/')."{$tableName}/images/", $returnedArray['filePath'][0]);
     }
 
     /**
@@ -75,7 +75,7 @@ class FileUploaderManagerTest extends TestCase
 
         $returnedAfterMove = $this->fileUploaderManager->storeTempMediaInRealPath(
             $newModelRecord,
-            $returnedArray['filePath']
+            $returnedArray['filePath'][0]
         );
 
         $this->assertInstanceOf(Media::class, $returnedAfterMove);
@@ -94,7 +94,7 @@ class FileUploaderManagerTest extends TestCase
 
         $newModelRecord = ModelImplementsFileUploaderInterface::create([]);
 
-        event(new UploadableModelHasCreated($newModelRecord, $returnedArray['filePath']));
+        event(new UploadableModelHasCreated($newModelRecord, $returnedArray['filePath'][0]));
         $this->assertEquals(1, ModelImplementsFileUploaderInterface::count());
     }
 
@@ -120,7 +120,7 @@ class FileUploaderManagerTest extends TestCase
         for ($i = 0; $i < $count; ++$i) {
             $data = $this->prepareDataForUploading();
             $returnedArray = $this->fileUploaderManager->uploadTheTempFile($data);
-            event(new UploadableModelHasCreated($newModelRecord, $returnedArray['filePath']));
+            event(new UploadableModelHasCreated($newModelRecord, $returnedArray['filePath'][0]));
         }
     }
 
@@ -129,7 +129,7 @@ class FileUploaderManagerTest extends TestCase
         return [
             'model' => 'ModelImplementsFileUploaderInterface',
             'mediaType' => 'images',
-            'media' => $this->fileFaker(),
+            'media' => [$this->fileFaker()],
         ];
     }
 }

@@ -19,9 +19,9 @@ class MediaUploaderService
     private $model;
 
     /**
-     * media file.
+     * media files.
      *
-     * @var UploadedFile
+     * @var array
      */
     private $media;
 
@@ -41,11 +41,16 @@ class MediaUploaderService
             ->setTheProperties($data);
     }
 
-    public function upload(string $tempPath): string
+    public function upload(string $tempPath): array
     {
         $generatedPath = $this->generateTempMediaPath($tempPath);
+        
+        $uploaded = [];
+        foreach($this->media as $media) {
+            $uploaded[] = $media->store($generatedPath);
+        }
 
-        return $this->media->store($generatedPath);
+        return $uploaded;
     }
 
     private function generateTempMediaPath(string $tempPath): string
@@ -104,20 +109,26 @@ class MediaUploaderService
         return $this;
     }
 
-    private function isMediaExtensionValidForThisMediaType(UploadedFile $media, string $mediaType): self
+    private function isMediaExtensionValidForThisMediaType(array $medias, string $mediaType): self
     {
-        $passedMediaExtensionType = $media->getClientOriginalExtension();
-        $allModelMediaTypes = $this->model->getMediaTypesWithItsOwnValidationRules();
-        $availableExtensionsForPassedMediaType = $allModelMediaTypes[$mediaType];
+        foreach ($medias as $media) {
+            $passedMediaExtensionType = $media->getClientOriginalExtension();
+            $allModelMediaTypes = $this->model->getMediaTypesWithItsOwnValidationRules();
+            $availableExtensionsForPassedMediaType = $allModelMediaTypes[$mediaType];
 
-        if (!in_array($passedMediaExtensionType, $availableExtensionsForPassedMediaType)) {
-            $stringOfAvailableExtensions = implode(' or ', $availableExtensionsForPassedMediaType);
-            throw new Exception(trans(
-                'FileUploader::exceptions.not_available_extension',
-                ['mediaType' => $mediaType, 'availableExtensions' => $stringOfAvailableExtensions]
-            ));
+            if (!in_array($passedMediaExtensionType, $availableExtensionsForPassedMediaType)) {
+                $stringOfAvailableExtensions = implode(' or ', $availableExtensionsForPassedMediaType);
+                throw new Exception(trans(
+                    'FileUploader::exceptions.not_available_extension',
+                    [
+                        'mediaType' => $mediaType, 
+                        'availableExtensions' => $stringOfAvailableExtensions,
+                        'mediaName' => $media->getClientOriginalName()
+                    ]
+                ));
+            }   
         }
-
+        
         return $this;
     }
 

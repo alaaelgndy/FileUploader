@@ -200,19 +200,19 @@ class MediaUploaderServiceTest extends TestCase
     public function it_uploads_the_file_on_the_storage()
     {
         $data = $this->generateRequiredData();
-
+        
         $validated = $this->mediaUploaderService->validatePassedDataForTempMedia($data);
 
         $uploaded = $validated->upload(config('elgndy_media.temp_path'));
-
-        $this->assertTrue(Storage::exists($uploaded));
+        
+        $this->assertTrue(Storage::exists($uploaded[0]));
     }
 
     private function generateRequiredData(?string $model = null, ?string $mediaType = null, ?string $extension = null): array
     {
         return [
             'model' => $model ?? 'ModelImplementsFileUploaderInterface',
-            'media' => $extension ? $this->fileFaker($extension) : $this->fileFaker(),
+            'media' => $extension ? [$this->fileFaker($extension)] : [$this->fileFaker()],
             'mediaType' => $mediaType ?? 'images',
         ];
     }
